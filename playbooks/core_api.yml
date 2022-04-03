@@ -16,13 +16,12 @@
 #   tags: mysql
 #   become: true
 
-- name: dotnet-core
+- name: deploy-core-api
   hosts:
     - core_api
   roles:
-    - dotnet-core
-  tags: dotnet-core
-  become: true
+    - deploy-core-api
+  tags: deploy-core-api
 
 - name: proxy
   hosts:

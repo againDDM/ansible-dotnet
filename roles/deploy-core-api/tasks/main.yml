@@ -1,0 +1,95 @@
+---
+
+- name: create core_api_group
+  group:
+    name: "{{ core_api_group }}"
+    state: present
+  become: true
+
+- name: create core_api_user
+  user:
+    name: "{{ core_api_user }}"
+    comment: "core_api_user"
+    group: "{{ core_api_group }}"
+    shell: /sbin/nologin
+    state: present
+  become: true
+
+- name: install git
+  apt:
+    pkg:
+      - git
+    state: present
+    install_recommends: no
+    update_cache: yes
+  become: true
+
+- name: install pygit
+  pip:
+    name: pygit
+    extra_args: --upgrade
+
+- name: clone sources
+  git:
+    repo: "{{ core_api_repository_url }}"
+    dest: "{{ core_api_build_directory }}"
+    single_branch: yes
+    version: "{{ core_api_repository_version }}"
+    clone: yes
+    depth: 1
+  become: false
+
+- name: build application
+  command: /usr/bin/dotnet build
+  args:
+    chdir: "{{ core_api_build_directory }}"
+  become: false
+
+- name: create working directory
+  file:
+    path: "{{ core_api_working_directory }}"
+    state: "directory"
+    recurse: yes
+    owner: "{{ core_api_user }}"
+    group: "{{ core_api_group }}"
+    mode: "0750"
+  become: true
+
+- name: copy application to working directory
+  copy:
+    remote_src: true
+    src: "{{ core_api_build_directory }}/bin/Debug/net6.0"
+    dest: "{{ core_api_working_directory }}"
+    owner: "{{ core_api_user }}"
+    group: "{{ core_api_group }}"
+    mode: "0550"
+    backup: yes
+    force: yes
+  become: true
+  notify:
+    - restart_core_api
+
+- name: render core_api systemd service template
+  template:
+    dest: "{{ core_api_systemd_dir }}/{{ core_api_systemd_unit }}"
+    src: "cope-api.service.j2"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    - restart_core_api
+
+- name: enable core_api systemd service
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ core_api_systemd_unit }}"
+    state: started
+  become: true
+
+- name: clean build directory
+  file:
+    path: "{{ core_api_build_directory }}"
+    state: "absent"
+  become: true
