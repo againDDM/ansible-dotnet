@@ -1,0 +1,10 @@
+---
+
+proxy_backends:
+  - host: "127.0.0.1"
+    port: 5000
+    backup: false
+    weight: 100
+
+proxy_domains: "{{ vault_proxy_domains }}"
+proxy_letsencrypt_email: "{{ vault_proxy_letsencrypt_email }}"

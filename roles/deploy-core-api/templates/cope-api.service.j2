@@ -1,0 +1,20 @@
+[Unit]
+Description=.NET Web API App running on {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+
+[Service]
+User={{ core_api_user }}
+Group={{ core_api_group }}
+WorkingDirectory={{ core_api_working_directory }}
+ExecStart=/usr/bin/dotnet {{ core_api_working_directory }}/TeatApi.dll
+
+Environment=ASPNETCORE_ENVIRONMENT=Production
+SyslogIdentifier={{ core_api_syslog_identifer }}
+LimitNOFILE={{ core_api_limit_no_file }}
+
+Restart=always
+RestartSec={{ core_api_restart_sec }}
+KillSignal=SIGINT
+TimeoutStopSec={{ core_api_timeout_stop_sec }}
+
+[Install]
+WantedBy=multi-user.target

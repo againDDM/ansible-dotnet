@@ -1,0 +1,6 @@
+---
+
+- src: "https://github.com/geerlingguy/ansible-role-mysql.git"
+  scm: "git"
+  name: "mysql"
+  version: "3.3.2"

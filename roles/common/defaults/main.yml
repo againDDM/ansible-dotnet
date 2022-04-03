@@ -1,0 +1,24 @@
+---
+
+common_apt_packages:
+  - ncdu
+  - htop
+  - ethtool
+  - dnsutils
+  - apache2-utils
+  - iotop
+  - iftop
+  - nmap
+  - whois
+  - net-tools
+  - iperf3
+  - mtr
+  - tmux
+  - curl
+  - wget
+  - wput
+  - gpg-agent
+  - python3-pip
+  - python-simplejson
+common_pip_packages:
+  - pip

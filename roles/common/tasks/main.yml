@@ -1,0 +1,36 @@
+---
+
+- name: install common packages
+  apt:
+    pkg: "{{ common_apt_packages }}"
+    state: present
+    install_recommends: no
+    update_cache: yes
+  become: true
+
+- name: upgrade pip
+  pip:
+    name: "{{ item }}"
+    extra_args: --upgrade
+  with_items: "{{ common_pip_packages }}"
+
+- name: sudo nopasswd validate
+  copy:
+    src: sudoers
+    dest: /etc/sudoers.edit
+    validate: /usr/sbin/visudo -csf %s
+  become: true
+
+- name: sudo nopasswd apply
+  copy:
+    src: /etc/sudoers.edit
+    dest: /etc/sudoers
+    validate: /usr/sbin/visudo -csf %s
+    remote_src: true
+  become: true
+
+- name: clean sudoers.edit
+  file:
+    path: /etc/sudoers.edit
+    state: absent
+  become: true

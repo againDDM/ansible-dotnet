@@ -1,0 +1,18 @@
+---
+
+proxy_domains:
+  - "example.com"
+
+proxy_backends:
+  - host: "127.0.0.1"
+    port: 5000
+    backup: false
+    weight: 100
+
+proxy_balancing_method: ""
+
+proxy_letsencrypt_email: "me@example.com"
+
+proxy_keepalive_timeout: 65
+proxy_worker_connections: 768
+proxy_types_hash_max_size: 2048

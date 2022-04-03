@@ -1,0 +1,5 @@
+---
+
+dotnet_package: "dotnet-sdk-6.0"
+dotnet_debian_repo_gpg_key_url: >
+  https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb

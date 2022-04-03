@@ -1,0 +1,13 @@
+---
+
+all:
+  children:
+    core_api:
+      hosts:
+        test-server:
+    core_database_mysql:
+      hosts:
+        test-server:
+    proxy:
+      hosts:
+        test-server:

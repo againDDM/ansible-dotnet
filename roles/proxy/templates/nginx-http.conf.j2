@@ -1,0 +1,21 @@
+################################################################################
+# This file is managed by ansible.
+# There is no need to make manual edits to it - they will surely be overwritten.
+################################################################################
+
+server_tokens off;
+
+server {
+    listen 80 default_server;
+    listen [::]:80;
+    server_name {{ proxy_domains | join(' ') }};
+
+    location /.well-known/acme-challenge {
+        root /var/www/letsencrypt;
+        try_files $uri $uri/ =404;
+    }
+
+    location / {
+        rewrite ^ https://$host$request_uri? permanent;
+    }
+}

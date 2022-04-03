@@ -1,0 +1,30 @@
+---
+
+- name: download packages-microsoft-prod
+  get_url:
+    url: "{{ dotnet_packages_microsoft_prod_url }}"
+    dest: "{{ dotnet_packages_microsoft_prod_dst }}"
+    mode: 0644
+  become: true
+- name: install apt-transport
+  apt:
+    pkg:
+      - "apt-transport-https"
+    state: present
+    install_recommends: no
+    update_cache: yes
+  become: true
+- name: install packages-microsoft-prod
+  apt:
+    deb: "{{ dotnet_packages_microsoft_prod_dst }}"
+    state: present
+    install_recommends: no
+    update_cache: no
+  become: true
+- name: install dotnet
+  apt:
+    pkg: "{{ dotnet_packages_list }}"
+    state: present
+    install_recommends: no
+    update_cache: yes
+  become: true

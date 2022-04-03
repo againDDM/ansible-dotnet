@@ -1,0 +1,33 @@
+---
+
+- name: common
+  hosts:
+    - core_api
+    - core_database_mysql
+  roles:
+    - common
+  tags: common
+
+# - name: mysql
+#   hosts:
+#     - core_database_mysql
+#   roles:
+#     - mysql
+#   tags: mysql
+#   become: true
+
+- name: dotnet-core
+  hosts:
+    - core_api
+  roles:
+    - dotnet-core
+  tags: dotnet-core
+  become: true
+
+- name: proxy
+  hosts:
+    - proxy
+  roles:
+    - proxy
+  tags: proxy
+  become: true
