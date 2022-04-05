@@ -1,8 +1,8 @@
 ---
 
-- name: restart_core_api
+- name: restart_wh_api
   systemd:
     daemon_reload: yes
     state: restarted
-    name: "{{ core_api_systemd_unit }}"
+    name: "{{ wh_api_systemd_unit }}"
   become: true

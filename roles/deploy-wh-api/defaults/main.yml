@@ -1,0 +1,17 @@
+---
+
+wh_api_user: "wh-api"
+wh_api_group: "wh-api"
+
+wh_api_systemd_unit: "wh-api.service"
+wh_api_systemd_dir: "/etc/systemd/system"
+wh_api_limit_no_file: 4096
+wh_api_restart_sec: 10
+wh_api_timeout_stop_sec: 90
+wh_api_syslog_identifer: "wh-api"
+
+wh_api_working_directory: "/opt/wh-api"
+wh_api_build_directory: "/tmp/wh-api"
+
+wh_api_repository_url: "https://github.com/againDDM/TeatApi.git"
+wh_api_repository_version: "main"

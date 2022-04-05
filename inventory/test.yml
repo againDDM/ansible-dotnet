@@ -2,10 +2,10 @@
 
 all:
   children:
-    core_api:
+    wh_api:
       hosts:
         test-server:
-    core_database_mysql:
+    wh_database_mysql:
       hosts:
         test-server:
     proxy:
