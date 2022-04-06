@@ -34,3 +34,14 @@
     path: /etc/sudoers.edit
     state: absent
   become: true
+
+- name: manage users
+  include_tasks: "manage_user.yml"
+  with_items: "{{ common_users }}"
+
+- name: remove revoked users
+  user:
+    name: "{{ item }}"
+    state: "absent"
+  with_items: "{{ common_revoked_users }}"
+  become: true

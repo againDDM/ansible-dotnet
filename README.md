@@ -9,7 +9,7 @@ ansible-playbook --ask-become-pass playbooks/wh_api.yml
 
 TODO:
 - mySQL
-- добавить в  роль common настройку фаервола, создание пользователей по списку, конфиг ssh демона и раскладку публичных ключей
+- добавить в  роль common настройку фаервола, конфиг ssh демона
 - logrotate
 - мониторинг через [telegraf](https://github.com/influxdata/telegraf) хостовой ОС, nginx, mySQL
 - модифицировать роль deploy, добавив healthcheck и fallback
