@@ -3,3 +3,7 @@
 dotnet_package: "dotnet-sdk-6.0"
 dotnet_debian_repo_gpg_key_url: >
   https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+
+wh_api_repository_url: "{{ vault_wh_api_repository_url }}"
+wh_api_entrypoint_dll: "{{ vault_wh_api_entrypoint_dll }}"
+wh_api_database_connection_string: "{{ vault_wh_api_database_connection_string }}"

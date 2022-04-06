@@ -42,11 +42,15 @@
     single_branch: yes
     version: "{{ wh_api_repository_version }}"
     clone: yes
+    accept_newhostkey: yes
     depth: 1
   become: false
 
 - name: build application
-  command: /usr/bin/dotnet build
+  command: |
+    /usr/bin/dotnet build
+    --output {{ wh_api_build_directory }}/bin
+    --configuration {{ wh_api_build_configuration }}
   args:
     chdir: "{{ wh_api_build_directory }}"
   become: false
@@ -64,13 +68,24 @@
 - name: copy application to working directory
   copy:
     remote_src: true
-    src: "{{ wh_api_build_directory }}/bin/Debug/net6.0"
+    src: "{{ wh_api_build_directory }}/bin"
     dest: "{{ wh_api_working_directory }}"
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
     mode: "0550"
     backup: yes
     force: yes
+  become: true
+  notify:
+    - restart_wh_api
+
+- name: render wh_api config template
+  template:
+    dest: "{{ wh_api_working_directory }}/bin/appsettings.json"
+    src: "appsettings.json.j2"
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: 0644
   become: true
   notify:
     - restart_wh_api

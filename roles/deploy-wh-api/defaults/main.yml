@@ -12,6 +12,9 @@ wh_api_syslog_identifer: "wh-api"
 
 wh_api_working_directory: "/opt/wh-api"
 wh_api_build_directory: "/tmp/wh-api"
+wh_api_build_configuration: "Release"
 
-wh_api_repository_url: "https://github.com/againDDM/TeatApi.git"
-wh_api_repository_version: "main"
+wh_api_repository_url: "git@bitbucket.org:example/example.git"
+wh_api_entrypoint_dll: "Example.dll"
+wh_api_repository_version: "master"
+wh_api_database_connection_string: "server=localhost;user=wh_api;password=wh_api;database=wh_api;Convert Zero Datetime=True;"
