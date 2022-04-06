@@ -9,6 +9,7 @@ common_apt_packages:
   - iotop
   - iftop
   - nmap
+  - zip
   - whois
   - net-tools
   - iperf3

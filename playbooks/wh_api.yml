@@ -8,13 +8,13 @@
     - common
   tags: common
 
-# - name: mysql
-#   hosts:
-#     - wh_database_mysql
-#   roles:
-#     - mysql
-#   tags: mysql
-#   become: true
+- name: mysql
+  hosts:
+    - wh_database_mysql
+  roles:
+    - mysql
+  tags: mysql
+  become: true
 
 - name: deploy-wh-api
   hosts:
