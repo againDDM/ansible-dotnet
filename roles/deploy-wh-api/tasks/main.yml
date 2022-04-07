@@ -48,7 +48,7 @@
 
 - name: build application
   command: |
-    /usr/bin/dotnet build
+    /usr/bin/dotnet publish
     --output {{ wh_api_build_directory }}/bin
     --configuration {{ wh_api_build_configuration }}
   args:
@@ -72,7 +72,7 @@
     dest: "{{ wh_api_working_directory }}"
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
-    mode: "0550"
+    mode: "0555"
     backup: yes
     force: yes
   become: true

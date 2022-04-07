@@ -48,6 +48,15 @@
   args:
     creates: /etc/nginx/dhparams.pem
 
+- name: calculate set empty domains list
+  set_fact:
+    proxy_domains: []
+
+- name: calculate full domains list
+  set_fact:
+    proxy_domains: "{{ proxy_domains + item.domains }}"
+  with_items: "{{ proxy_vs_configs }}"
+
 - name: render main nginx config
   template:
     src: nginx.conf.j2
@@ -65,7 +74,7 @@
 - name: render http nginx config
   template:
     src: nginx-http.conf.j2
-    dest: "/etc/nginx/sites-enabled/{{ proxy_domains[0] }}.conf"
+    dest: "/etc/nginx/sites-enabled/bare-http.conf"
     mode: "0644"
     owner: "root"
     group: "root"
@@ -86,7 +95,7 @@
     letsencrypt certonly -n --webroot
     -w /var/www/letsencrypt
     -m {{ proxy_letsencrypt_email }}
-    --agree-tos -d {{ proxy_domains[0] }} --dry-run
+    --agree-tos -d {{ proxy_domains | join(' -d ') }} --dry-run
   become: true
 
 - name: create letsencrypt certificate
@@ -94,7 +103,7 @@
     letsencrypt certonly -n --webroot
     -w /var/www/letsencrypt
     -m {{ proxy_letsencrypt_email }}
-    --agree-tos -d {{ proxy_domains[0] }}
+    --agree-tos -d {{ proxy_domains | join(' -d ') }}
   args:
     creates: "/etc/letsencrypt/live/{{ proxy_domains[0] }}"
   become: true
@@ -102,7 +111,7 @@
 - name: render site nginx config
   template:
     src: nginx-tls.conf.j2
-    dest: "/etc/nginx/sites-enabled/{{ proxy_domains[0] }}-tls.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item.domains[0] }}.conf"
     mode: "0644"
     owner: "root"
     group: "root"
@@ -110,5 +119,6 @@
     force: yes
     backup: yes
   become: true
+  with_items: "{{ proxy_vs_configs }}"
   notify:
     - reload_nginx

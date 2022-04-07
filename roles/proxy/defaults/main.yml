@@ -1,15 +1,14 @@
 ---
 
-proxy_domains:
-  - "example.com"
-
-proxy_backends:
-  - host: "127.0.0.1"
-    port: 5000
-    backup: false
-    weight: 100
-
-proxy_balancing_method: ""
+proxy_vs_configs:
+  - domains:
+    - "example.com"
+    backends:
+      - host: "127.0.0.1"
+        port: 5000
+        backup: false
+        weight: 100
+    balancing_method: ""
 
 proxy_letsencrypt_email: "me@example.com"
 
