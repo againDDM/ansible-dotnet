@@ -79,10 +79,21 @@
   notify:
     - restart_wh_api
 
-- name: render wh_api config template
+- name: render appsettings template
   template:
     dest: "{{ wh_api_working_directory }}/bin/appsettings.json"
     src: "appsettings.json.j2"
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: 0644
+  become: true
+  notify:
+    - restart_wh_api
+
+- name: render jwt template
+  template:
+    dest: "{{ wh_api_working_directory }}/bin/jwt.json"
+    src: "jwt.json.j2"
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
     mode: 0644

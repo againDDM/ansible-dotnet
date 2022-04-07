@@ -18,3 +18,8 @@ wh_api_repository_url: "git@bitbucket.org:example/example.git"
 wh_api_entrypoint_dll: "Example.dll"
 wh_api_repository_version: "master"
 wh_api_database_connection_string: "server=localhost;user=wh_api;password=wh_api;database=wh_api;Convert Zero Datetime=True;"
+
+wh_api_jwt_issuer: "wh-api"
+wh_api_jwt_audience: "wh-api"
+wh_api_jwt_key: "a'UZKV5PB%9H:DqqwgtX:{48BZwg<g=4DX"
+wh_api_jwt_lifetime: "30"
