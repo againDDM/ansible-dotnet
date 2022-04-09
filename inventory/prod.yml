@@ -1,0 +1,13 @@
+---
+
+all:
+  children:
+    wh_api:
+      hosts:
+        prod-server:
+    wh_database_mysql:
+      hosts:
+        prod-server:
+    proxy:
+      hosts:
+        prod-server:
