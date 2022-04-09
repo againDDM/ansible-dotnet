@@ -1,11 +1,23 @@
 ---
 
+- name: set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+  become: true
+
+- name: update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400 #One day
+  become: true
+
 - name: install common packages
   apt:
     pkg: "{{ common_apt_packages }}"
     state: present
     install_recommends: no
-    update_cache: yes
+    update_cache: no
   become: true
 
 - name: upgrade pip
@@ -45,3 +57,19 @@
     state: "absent"
   with_items: "{{ common_revoked_users }}"
   become: true
+
+- name: sshd config change
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+  become: true
+  notify:
+    - restart_sshd
+
+- name: sshd config change
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+  become: true
+  notify:
+    - restart_sshd
