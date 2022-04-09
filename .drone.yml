@@ -1,0 +1,17 @@
+---
+
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: check ansible syntax
+    image: plugins/ansible:1
+    environment: {}
+    settings:
+      playbook: playbooks/wh_api.yml
+      galaxy: requirements.yml
+      inventory: inventory/test.yml
+      syntax_check: true
+      vault_password:
+        from_secret: ansible_vault_password
