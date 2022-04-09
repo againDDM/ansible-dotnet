@@ -2,16 +2,24 @@
 
 kind: pipeline
 type: docker
-name: default
+name: deploy
 
 steps:
-  - name: check ansible syntax
-    image: plugins/ansible:1
-    environment: {}
-    settings:
-      playbook: playbooks/wh_api.yml
-      galaxy: requirements.yml
-      inventory: inventory/test.yml
-      syntax_check: true
-      vault_password:
-        from_secret: ansible_vault_password
+  - name: deploy test
+    image: python:3.9-slim-bullseye
+    environment:
+      VAULT_PASS:
+        from_secret: "vault_pass"
+      SSH_KEY:
+        from_secret: "ssh_key"
+    commands:
+      - 'echo "${VAULT_PASS}" > .vault_pass.txt'
+      - 'echo "${SSH_KEY}" > id_ssh_key'
+      - "python3 -m pip install -r requirements.txt"
+      - "ansible-galaxy install -r requirements.yml"
+      - |
+        ansible-playbook
+        --key-file id_ssh_key
+        --user droneci
+        --inventory inventory/test.yml
+        playbooks/wh_api.yml
