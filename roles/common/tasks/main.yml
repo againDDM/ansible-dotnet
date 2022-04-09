@@ -5,6 +5,16 @@
     name: "{{ inventory_hostname }}"
   become: true
 
+- name: render hosts
+  template:
+    src: "hosts.j2"
+    dest: "/etc/hosts"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+    force: yes
+  become: true
+
 - name: update and upgrade apt packages
   apt:
     upgrade: yes
@@ -26,25 +36,11 @@
     extra_args: --upgrade
   with_items: "{{ common_pip_packages }}"
 
-- name: sudo nopasswd validate
+- name: sudo nopasswd
   copy:
     src: sudoers
-    dest: /etc/sudoers.edit
-    validate: /usr/sbin/visudo -csf %s
-  become: true
-
-- name: sudo nopasswd apply
-  copy:
-    src: /etc/sudoers.edit
     dest: /etc/sudoers
     validate: /usr/sbin/visudo -csf %s
-    remote_src: true
-  become: true
-
-- name: clean sudoers.edit
-  file:
-    path: /etc/sudoers.edit
-    state: absent
   become: true
 
 - name: manage users
