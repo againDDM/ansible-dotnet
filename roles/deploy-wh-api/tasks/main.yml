@@ -62,7 +62,7 @@
     recurse: yes
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
-    mode: "0750"
+    mode: "0755"
   become: true
 
 - name: copy application to working directory
@@ -100,6 +100,16 @@
   become: true
   notify:
     - restart_wh_api
+
+- name: create logs directory
+  file:
+    path: "{{ wh_api_working_directory }}/bin/Logs"
+    state: "directory"
+    recurse: yes
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: "0755"
+  become: true
 
 - name: render wh_api systemd service template
   template:

@@ -10,7 +10,7 @@ Description=.NET Web API App running on {{ ansible_distribution }} {{ ansible_di
 [Service]
 User={{ wh_api_user }}
 Group={{ wh_api_group }}
-WorkingDirectory={{ wh_api_working_directory }}
+WorkingDirectory={{ wh_api_working_directory }}/bin
 ExecStart=/usr/bin/dotnet {{ wh_api_working_directory }}/bin/{{ wh_api_entrypoint_dll }}
 
 Environment=ASPNETwh_ENVIRONMENT=Production

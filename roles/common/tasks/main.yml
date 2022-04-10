@@ -54,13 +54,13 @@
   with_items: "{{ common_revoked_users }}"
   become: true
 
-- name: sshd config change
+- name: journald config change
   copy:
-    src: sshd_config
-    dest: /etc/ssh/sshd_config
+    src: journald.conf
+    dest: /etc/systemd/journald.conf
   become: true
   notify:
-    - restart_sshd
+    - restart_journald
 
 - name: sshd config change
   copy:
