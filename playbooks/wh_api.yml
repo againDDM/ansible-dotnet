@@ -30,3 +30,11 @@
     - proxy
   tags: proxy
   become: true
+
+- name: telegraf
+  hosts:
+    - all
+  roles:
+    - telegraf
+  tags: telegraf
+  become: true

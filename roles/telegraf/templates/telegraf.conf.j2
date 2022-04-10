@@ -1,0 +1,60 @@
+################################################################################
+# This file is managed by ansible.
+# There is no need to make manual edits to it - they will surely be overwritten.
+################################################################################
+
+[global_tags]
+  project = "{{ telegraf_project | default('undefined') }}"
+
+[agent]
+  interval = "{{ telegraf_interval }}"
+  logtarget = "stderr"
+  omit_hostname = false
+
+[[inputs.cpu]]
+  percpu = false
+  totalcpu = true
+  collect_cpu_time = true
+  report_active = true
+
+[[inputs.disk]]
+  ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+
+[[inputs.diskio]]
+
+[[inputs.ethtool]]
+
+[[inputs.interrupts]]
+
+[[inputs.kernel]]
+
+[[inputs.kernel_vmstat]]
+
+[[inputs.mem]]
+
+[[inputs.processes]]
+
+[[inputs.swap]]
+
+[[inputs.system]]
+
+{% if 'wh_database_mysql' in group_names %}
+[[inputs.mysql]]
+  servers = ["{{ mysql_root_username }}:{{ mysql_root_password }}@tcp(localhost:{{ mysql_port }})/"]
+  metric_version = 2
+{% endif %}
+
+{% if 'proxy' in group_names %}
+[[inputs.nginx]]
+  urls = ["http://localhost:{{ proxy_metrics_port }}/basic_status"]
+  response_timeout = "5s"
+{% endif %}
+
+[[outputs.prometheus_client]]
+  listen = "{{ telegraf_prometheus_client_listen }}"
+  metric_version = 2
+  path = "{{ telegraf_prometheus_client_path }}"
+  expiration_interval = "{{ telegraf_prometheus_client_expiration_interval }}"
+  collectors_exclude = ["gocollector", "process"]
+  basic_username = "{{ telegraf_prometheus_client_basic_username }}"
+  basic_password = "{{ telegraf_prometheus_client_basic_password }}"

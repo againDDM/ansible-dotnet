@@ -4,8 +4,8 @@
 ################################################################################
 
 user www-data;
-worker_processes {{ ansible_processor_vcpus }};
 pid /run/nginx.pid;
+worker_processes {{ ansible_processor_vcpus }};
 
 events {
     worker_connections {{ proxy_worker_connections }};

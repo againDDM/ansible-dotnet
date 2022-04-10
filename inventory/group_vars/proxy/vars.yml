@@ -2,3 +2,4 @@
 
 proxy_vs_configs: "{{ vault_proxy_vs_configs }}"
 proxy_letsencrypt_email: "{{ vault_proxy_letsencrypt_email }}"
+proxy_metrics_port: 8000

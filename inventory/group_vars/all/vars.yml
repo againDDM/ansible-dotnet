@@ -6,3 +6,5 @@ ansible_port: 22
 
 common_users: "{{ vault_common_users }}"
 common_revoked_users: "{{ vault_common_revoked_users }}"
+
+telegraf_project: wh-api

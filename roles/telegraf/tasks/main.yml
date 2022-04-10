@@ -1,0 +1,36 @@
+---
+
+- name: add an apt signing key for telegraf
+  apt_key:
+    url: "https://repos.influxdata.com/influxdb.key"
+    state: present
+  become: true
+
+- name: add influxdata repository
+  apt_repository:
+    repo: deb https://repos.influxdata.com/debian stable main
+    state: present
+    filename: influxdata
+    update_cache: no
+  become: true
+
+- name: install telegraf
+  apt:
+    pkg:
+      - "telegraf"
+    state: present
+    install_recommends: no
+    update_cache: yes
+  become: true
+
+- name: render telegraf config
+  template:
+    src: telegraf.conf.j2
+    dest: "/etc/telegraf/telegraf.conf"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+    force: yes
+  become: true
+  notify:
+    - restart_telegraf

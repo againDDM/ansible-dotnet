@@ -66,10 +66,22 @@
     group: "root"
     validate: "nginx -tc %s"
     force: yes
-    backup: yes
+    backup: no
   become: true
   notify:
     - reload_nginx
+
+- name: render stats nginx config
+  template:
+    src: nginx-stats.conf.j2
+    dest: "/etc/nginx/sites-enabled/stats.conf"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+    validate: "sh -c 'nginx -t && echo %s'"
+    force: yes
+    backup: no
+  become: true
 
 - name: render http nginx config
   template:
@@ -80,7 +92,7 @@
     group: "root"
     validate: "sh -c 'nginx -t && echo %s'"
     force: yes
-    backup: yes
+    backup: no
   become: true
   register: http
 
@@ -117,7 +129,7 @@
     group: "root"
     validate: "sh -c 'nginx -t && echo %s'"
     force: yes
-    backup: yes
+    backup: no
   become: true
   with_items: "{{ proxy_vs_configs }}"
   notify:
