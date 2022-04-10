@@ -46,6 +46,12 @@
     depth: 1
   become: false
 
+- name: clear locks
+  file:
+    path: "/tmp/NuGetScratch"
+    state: "absent"
+  become: true
+
 - name: build application
   command: |
     /usr/bin/dotnet publish

@@ -5,8 +5,9 @@ type: docker
 name: deploy
 
 steps:
-  - name: deploy test
-    image: python:3.9-slim-bullseye
+  - name: deploy
+    image: haxorof/ansible:v5-ubuntu
+    user: root
     environment:
       VAULT_PASS:
         from_secret: "vault_pass"
@@ -14,10 +15,8 @@ steps:
         from_secret: "ssh_key"
     commands:
       - echo $${VAULT_PASS} > .vault_pass.txt
-      - echo -e $${SSH_KEY} > id_ssh_key
-      - chmod 600 id_ssh_key
-      - apt update && apt install -y git
-      - python3 -m pip install -r requirements.txt
+      - eval $(ssh-agent)
+      - echo $${SSH_KEY} | ssh-add -
       - ansible-galaxy install -r requirements.yml
-      - ansible-playbook --key-file id_ssh_key --user droneci --inventory inventory/test.yml playbooks/wh_api.yml
-      - ansible-playbook --key-file id_ssh_key --user droneci --inventory inventory/prod.yml playbooks/wh_api.yml
+      - ansible-playbook --tags deploy-wh-api --user droneci --inventory inventory/test.yml playbooks/wh_api.yml
+      - ansible-playbook --user droneci --inventory inventory/prod.yml playbooks/wh_api.yml
