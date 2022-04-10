@@ -71,23 +71,28 @@
     mode: "0755"
   become: true
 
-- name: copy application to working directory
+- name: ls build results
+  command: "ls {{ wh_api_build_directory }}/bin"
+  register: "build_results"
+
+- name: copy files to working directory
   copy:
     remote_src: true
-    src: "{{ wh_api_build_directory }}/bin"
+    src: "{{ wh_api_build_directory }}/bin/{{ item }}"
     dest: "{{ wh_api_working_directory }}"
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
     mode: "0555"
-    backup: yes
+    backup: no
     force: yes
+  with_items: "{{ build_results.stdout_lines }}"
   become: true
   notify:
     - restart_wh_api
 
 - name: render appsettings template
   template:
-    dest: "{{ wh_api_working_directory }}/bin/appsettings.json"
+    dest: "{{ wh_api_working_directory }}/appsettings.json"
     src: "appsettings.json.j2"
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
@@ -98,7 +103,7 @@
 
 - name: render jwt template
   template:
-    dest: "{{ wh_api_working_directory }}/bin/jwt.json"
+    dest: "{{ wh_api_working_directory }}/jwt.json"
     src: "jwt.json.j2"
     owner: "{{ wh_api_user }}"
     group: "{{ wh_api_group }}"
@@ -109,7 +114,7 @@
 
 - name: create logs directory
   file:
-    path: "{{ wh_api_working_directory }}/bin/Logs"
+    path: "{{ wh_api_working_directory }}/Logs"
     state: "directory"
     recurse: yes
     owner: "{{ wh_api_user }}"
