@@ -12,5 +12,4 @@ TODO:
 - mySQL развёртывание бэкапов
 - добавить в  роль common настройку фаервола
 - logrotate
-- мониторинг через [telegraf](https://github.com/influxdata/telegraf) хостовой ОС, nginx, mySQL
 - модифицировать роль deploy, добавив healthcheck и fallback
