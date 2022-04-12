@@ -12,8 +12,8 @@
   hosts:
     - wh_database_mysql
   roles:
-    - mysql
-  tags: mysql
+    - wh-database-mysql
+  tags: wh-database-mysql
   become: true
 
 - name: deploy-wh-api

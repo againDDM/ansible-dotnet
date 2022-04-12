@@ -57,6 +57,7 @@
     /usr/bin/dotnet publish
     --output {{ wh_api_build_directory }}/bin
     --configuration {{ wh_api_build_configuration }}
+    {{ wh_api_build_directory }}/{{ wh_api_main_csproj_subpath }}
   args:
     chdir: "{{ wh_api_build_directory }}"
   become: false

@@ -1,0 +1,10 @@
+---
+
+mysql_backup_by_cron_on: false
+mysql_backup_databases: []
+  # - database: "example_database"
+  #   weekday: "*"
+  #   hour: "0"
+  #   minute: "0"
+mysql_backup_directory: "/opt/mysql-backups"
+mysql_backup_ttl: 3

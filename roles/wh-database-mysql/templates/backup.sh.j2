@@ -1,0 +1,17 @@
+#!/bin/bash
+################################################################################
+# This file is managed by ansible.
+# There is no need to make manual edits to it - they will surely be overwritten.
+################################################################################
+
+{% for number in range(mysql_backup_ttl - 1, 0, -1) %}
+mv {{ mysql_backup_directory }}/{{ item.database }}/data-dump-{{ number - 1 }}.sql \
+    {{ mysql_backup_directory }}/{{ item.database }}/data-dump-{{ number }}.sql
+{% endfor %}
+
+mysqldump \
+    --defaults-extra-file={{ mysql_backup_directory }}/my.cnf \
+    {{ item.database }} \
+    > {{ mysql_backup_directory }}/{{ item.database }}/data-dump-0.sql
+
+chmod 644 {{ mysql_backup_directory }}/{{ item.database }}/data-dump-0.sql

@@ -9,7 +9,6 @@ ansible-playbook playbooks/wh_api.yml
 
 TODO:
 - proxy - добавить перезапрос на подписывание сертов при изменении списка доменов, добавить кронячку для перезапросов
-- mySQL развёртывание бэкапов
 - добавить в  роль common настройку фаервола
 - logrotate
 - модифицировать роль deploy, добавив healthcheck и fallback

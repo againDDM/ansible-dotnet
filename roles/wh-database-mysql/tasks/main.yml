@@ -1,0 +1,48 @@
+---
+
+- name: create backup directories
+  file:
+    path: "{{ mysql_backup_directory }}/{{ item.database }}"
+    state: "directory"
+    recurse: yes
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  with_items: "{{ mysql_backup_databases }}"
+  become: true
+
+- name: render mysql client config
+  template:
+    src: "my.cnf.j2"
+    dest: "{{ mysql_backup_directory }}/my.cnf"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+    force: yes
+    backup: no
+  become: true
+
+- name: render backup scripts
+  template:
+    src: "backup.sh.j2"
+    dest: "{{ mysql_backup_directory }}/{{ item.database }}/backups.sh"
+    owner: "root"
+    group: "root"
+    mode: "0700"
+    force: yes
+    backup: no
+  with_items: "{{ mysql_backup_databases }}"
+  become: true
+
+- name: creates backup cronjobs
+  cron:
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    weekday: "{{ item.weekday }}"
+    name: "backup mysql"
+    cron_file: "mysqlbackup"
+    user: "root"
+    job: "{{ mysql_backup_directory }}/{{ item.database }}/backups.sh"
+  with_items: "{{ mysql_backup_databases }}"
+  become: true
+  when: mysql_backup_by_cron_on | default(false) | bool
