@@ -5,4 +5,4 @@ ansible_host: "{{ vault_ansible_host }}"
 proxy_vs_configs: "{{ vault_proxy_vs_configs }}"
 proxy_letsencrypt_email: "{{ vault_proxy_letsencrypt_email }}"
 
-environment: test
+mysql_backup_ttl: 1
