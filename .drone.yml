@@ -18,4 +18,4 @@ steps:
       - eval $(ssh-agent)
       - echo $${SSH_KEY} | ssh-add -
       - ansible-galaxy install -r requirements.yml
-      - ansible-playbook --tags deploy-wh-api --user droneci --inventory inventory/prod.yml --inventory inventory/test.yml playbooks/wh_api.yml
+      - ansible-playbook --tags deploy-wh-api --user droneci --inventory inventory/prod.yml playbooks/wh_api.yml
