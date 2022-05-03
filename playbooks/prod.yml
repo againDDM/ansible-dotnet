@@ -16,12 +16,31 @@
   tags: wh-database-mysql
   become: true
 
+- name: install-dotnet-core
+  hosts:
+    - dotnet_backends
+  roles:
+    - dotnet-core
+  tags:
+    - dotnet-core
+    - deploy-wh-api
+    - deploy-questionnaire-bot
+
+- name: deploy-questionnaire-bot
+  hosts:
+    - questionnaire_bot
+  roles:
+    - deploy-questionnaire-bot
+  tags:
+    - deploy-questionnaire-bot
+
 - name: deploy-wh-api
   hosts:
     - wh_api
   roles:
     - deploy-wh-api
-  tags: deploy-wh-api
+  tags:
+    - deploy-wh-api
 
 - name: proxy
   hosts:

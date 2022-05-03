@@ -1,0 +1,8 @@
+---
+
+- name: restart_questionnaire_bot
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: "{{ questionnaire_bot_systemd_unit }}"
+  become: true

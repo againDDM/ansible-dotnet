@@ -2,9 +2,14 @@
 
 all:
   children:
-    wh_api:
-      hosts:
-        prod-server:
+    dotnet_backends:
+      children:
+        wh_api:
+          hosts:
+            prod-server:
+        questionnaire_bot:
+          hosts:
+            prod-server:
     wh_database_mysql:
       hosts:
         prod-server:

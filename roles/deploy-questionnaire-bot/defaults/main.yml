@@ -1,0 +1,24 @@
+---
+
+questionnaire_bot_user: "questionnaire-bot"
+questionnaire_bot_group: "questionnaire-bot"
+
+questionnaire_bot_systemd_unit: "questionnaire-bot.service"
+questionnaire_bot_systemd_dir: "/etc/systemd/system"
+questionnaire_bot_limit_no_file: 256
+questionnaire_bot_restart_sec: 10
+questionnaire_bot_timeout_stop_sec: 30
+questionnaire_bot_syslog_identifer: "questionnaire-bot"
+
+questionnaire_bot_working_directory: "/opt/questionnaire-bot"
+questionnaire_bot_build_directory: "/tmp/questionnaire-bot"
+questionnaire_bot_build_configuration: "Release"
+questionnaire_bot_main_csproj_subpath: "RQ.Bot/RQ.Bot.csproj"
+questionnaire_bot_repository_url: "https://github.com/kenoma/Refugee.Questionnaire.git"
+questionnaire_bot_entrypoint_dll: "RQ.Bot.dll"
+questionnaire_bot_repository_version: "master"
+
+questionnaire_bot_telegram_token: "xxxxxxx:yyyyyyyyyyyyy"
+questionnaire_bot_urls: "http://localhost:9002"
+questionnaire_bot_db_path: "{{ questionnaire_bot_working_directory }}/db"
+questionnaire_bot_quest_path: "{{ questionnaire_bot_working_directory }}/quest.csv"

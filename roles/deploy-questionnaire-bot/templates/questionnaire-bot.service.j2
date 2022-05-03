@@ -1,0 +1,26 @@
+
+################################################################################
+# This file is managed by ansible.
+# There is no need to make manual edits to it - they will surely be overwritten.
+################################################################################
+
+[Unit]
+Description=.NET Refugee.Questionnaire running on {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+
+[Service]
+User={{ questionnaire_bot_user }}
+Group={{ questionnaire_bot_group }}
+WorkingDirectory={{ questionnaire_bot_working_directory }}
+ExecStart=/usr/bin/dotnet {{ questionnaire_bot_working_directory }}/{{ questionnaire_bot_entrypoint_dll }} --urls="{{ questionnaire_bot_urls }}" --dbPath={{ questionnaire_bot_db_path }} --botToken={{ questionnaire_bot_telegram_token }} --pathToQuest={{ questionnaire_bot_quest_path }}
+
+Environment=ASPNET_ENVIRONMENT=Production
+SyslogIdentifier={{ questionnaire_bot_syslog_identifer }}
+LimitNOFILE={{ questionnaire_bot_limit_no_file }}
+
+Restart=always
+RestartSec={{ questionnaire_bot_restart_sec }}
+KillSignal=SIGINT
+TimeoutStopSec={{ questionnaire_bot_timeout_stop_sec }}
+
+[Install]
+WantedBy=multi-user.target

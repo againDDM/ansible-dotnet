@@ -1,0 +1,139 @@
+---
+
+- name: create questionnaire_bot_group
+  group:
+    name: "{{ questionnaire_bot_group }}"
+    state: present
+  become: true
+
+- name: create questionnaire_bot_user
+  user:
+    name: "{{ questionnaire_bot_user }}"
+    comment: "questionnaire_bot_user"
+    group: "{{ questionnaire_bot_group }}"
+    shell: /sbin/nologin
+    state: present
+  become: true
+
+- name: install git
+  apt:
+    pkg:
+      - git
+    state: present
+    install_recommends: no
+    update_cache: yes
+    cache_valid_time: 86400 # One day
+  become: true
+
+- name: install pygit
+  pip:
+    name: pygit
+    extra_args: --upgrade
+
+- name: enshure build directory not exists
+  file:
+    path: "{{ questionnaire_bot_build_directory }}"
+    state: "absent"
+  become: true
+
+- name: clone sources
+  git:
+    repo: "{{ questionnaire_bot_repository_url }}"
+    dest: "{{ questionnaire_bot_build_directory }}"
+    single_branch: yes
+    version: "{{ questionnaire_bot_repository_version }}"
+    clone: yes
+    accept_newhostkey: yes
+    depth: 1
+  become: false
+
+- name: clear locks
+  file:
+    path: "/tmp/NuGetScratch"
+    state: "absent"
+  become: true
+
+- name: build application
+  command: |
+    /usr/bin/dotnet publish
+    --output {{ questionnaire_bot_build_directory }}/bin
+    --configuration {{ questionnaire_bot_build_configuration }}
+    {{ questionnaire_bot_build_directory }}/{{ questionnaire_bot_main_csproj_subpath }}
+  args:
+    chdir: "{{ questionnaire_bot_build_directory }}"
+  become: false
+
+- name: create working directory
+  file:
+    path: "{{ questionnaire_bot_working_directory }}"
+    state: "directory"
+    recurse: yes
+    owner: "{{ questionnaire_bot_user }}"
+    group: "{{ questionnaire_bot_group }}"
+    mode: "0755"
+  become: true
+
+- name: ls build results
+  command: "ls {{ questionnaire_bot_build_directory }}/bin"
+  register: "build_results"
+
+- name: copy files to working directory
+  copy:
+    remote_src: true
+    src: "{{ questionnaire_bot_build_directory }}/bin/{{ item }}"
+    dest: "{{ questionnaire_bot_working_directory }}"
+    owner: "{{ questionnaire_bot_user }}"
+    group: "{{ questionnaire_bot_group }}"
+    mode: "0555"
+    backup: no
+    force: yes
+  with_items: "{{ build_results.stdout_lines }}"
+  become: true
+  notify:
+    - restart_questionnaire_bot
+
+- name: copy quest csv file
+  copy:
+    dest: "{{ questionnaire_bot_quest_path }}"
+    src: "quest.csv"
+    owner: "{{ questionnaire_bot_user }}"
+    group: "{{ questionnaire_bot_group }}"
+    mode: "0400"
+  become: true
+  notify:
+    - restart_questionnaire_bot
+
+- name: create db directory
+  file:
+    path: "{{ questionnaire_bot_db_path }}"
+    state: "directory"
+    recurse: yes
+    owner: "{{ questionnaire_bot_user }}"
+    group: "{{ questionnaire_bot_group }}"
+    mode: "0700"
+  become: true
+
+- name: render questionnaire_bot systemd service template
+  template:
+    dest: "{{ questionnaire_bot_systemd_dir }}/{{ questionnaire_bot_systemd_unit }}"
+    src: "questionnaire-bot.service.j2"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    - restart_questionnaire_bot
+
+- name: enable questionnaire_bot systemd service
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ questionnaire_bot_systemd_unit }}"
+    state: started
+  become: true
+
+- name: clean build directory
+  file:
+    path: "{{ questionnaire_bot_build_directory }}"
+    state: "absent"
+  become: true
