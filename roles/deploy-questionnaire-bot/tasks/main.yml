@@ -63,9 +63,9 @@
     chdir: "{{ questionnaire_bot_build_directory }}"
   become: false
 
-- name: create working directory
+- name: create app directory
   file:
-    path: "{{ questionnaire_bot_working_directory }}"
+    path: "{{ questionnaire_bot_app_directory }}"
     state: "directory"
     recurse: yes
     owner: "{{ questionnaire_bot_user }}"
@@ -77,11 +77,11 @@
   command: "ls {{ questionnaire_bot_build_directory }}/bin"
   register: "build_results"
 
-- name: copy files to working directory
+- name: copy files to app directory
   copy:
     remote_src: true
     src: "{{ questionnaire_bot_build_directory }}/bin/{{ item }}"
-    dest: "{{ questionnaire_bot_working_directory }}"
+    dest: "{{ questionnaire_bot_app_directory }}"
     owner: "{{ questionnaire_bot_user }}"
     group: "{{ questionnaire_bot_group }}"
     mode: "0555"
@@ -90,47 +90,14 @@
   with_items: "{{ build_results.stdout_lines }}"
   become: true
   notify:
-    - restart_questionnaire_bot
+    - restart_all_instances
 
-- name: copy quest csv file
-  copy:
-    dest: "{{ questionnaire_bot_quest_path }}"
-    src: "quest.csv"
-    owner: "{{ questionnaire_bot_user }}"
-    group: "{{ questionnaire_bot_group }}"
-    mode: "0400"
-  become: true
-  notify:
-    - restart_questionnaire_bot
-
-- name: create db directory
-  file:
-    path: "{{ questionnaire_bot_db_path }}"
-    state: "directory"
-    recurse: yes
-    owner: "{{ questionnaire_bot_user }}"
-    group: "{{ questionnaire_bot_group }}"
-    mode: "0700"
-  become: true
-
-- name: render questionnaire_bot systemd service template
-  template:
-    dest: "{{ questionnaire_bot_systemd_dir }}/{{ questionnaire_bot_systemd_unit }}"
-    src: "questionnaire-bot.service.j2"
-    owner: root
-    group: root
-    mode: 0644
-  become: true
-  notify:
-    - restart_questionnaire_bot
-
-- name: enable questionnaire_bot systemd service
-  systemd:
-    daemon_reload: yes
-    enabled: yes
-    name: "{{ questionnaire_bot_systemd_unit }}"
-    state: started
-  become: true
+- name: deploy instances
+  include_tasks: deploy_instance.yml
+  no_log: true
+  with_items: "{{ questionnaire_bot_instances }}"
+  loop_control:
+    loop_var: "instance"
 
 - name: clean build directory
   file:

@@ -1,0 +1,48 @@
+---
+
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: "directory"
+    recurse: yes
+    owner: "{{ questionnaire_bot_user }}"
+    group: "{{ questionnaire_bot_group }}"
+    mode: "0700"
+  no_log: true
+  with_items:
+    - "{{ instance.working_directory }}"
+    - "{{ instance.db_path }}"
+  become: true
+
+- name: copy quest csv file
+  copy:
+    dest: "{{ instance.quest_path }}"
+    src: "{{ instance.quest_csv_src }}"
+    owner: "{{ questionnaire_bot_user }}"
+    group: "{{ questionnaire_bot_group }}"
+    mode: "0400"
+  no_log: true
+  become: true
+  notify:
+    - restart_all_instances
+
+- name: render questionnaire_bot systemd service template
+  template:
+    dest: "{{ questionnaire_bot_systemd_dir }}/{{ instance.systemd_unit }}"
+    src: "questionnaire-bot.service.j2"
+    owner: root
+    group: root
+    mode: 0644
+  no_log: true
+  become: true
+  notify:
+    - restart_all_instances
+
+- name: enable questionnaire_bot systemd service
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ instance.systemd_unit }}"
+    state: started
+  no_log: true
+  become: true

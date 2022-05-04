@@ -1,8 +1,10 @@
 ---
 
-- name: restart_questionnaire_bot
+- name: restart_all_instances
   systemd:
     daemon_reload: yes
     state: restarted
-    name: "{{ questionnaire_bot_systemd_unit }}"
+    name: "{{ item.systemd_unit }}"
+  with_items: "{{ questionnaire_bot_instances }}"
+  no_log: true
   become: true
