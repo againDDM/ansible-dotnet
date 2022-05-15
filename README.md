@@ -4,7 +4,7 @@ wh_api ansible infrastructure
 ```sh
 python3 -m pip install -r requirements.txt
 ansible-galaxy install -r requirements.yml
-ansible-playbook playbooks/wh_api.yml
+ansible-playbook playbooks/prod.yml
 ```
 
 TODO:

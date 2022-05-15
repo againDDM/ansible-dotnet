@@ -5,7 +5,7 @@
 ################################################################################
 
 [Unit]
-Description={{ instance.syslog_identifer }}
+Description={{ instance.comment if instance.comment is defined else instance.syslog_identifer }}
 
 [Service]
 User={{ questionnaire_bot_user }}

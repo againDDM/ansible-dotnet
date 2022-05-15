@@ -1,3 +1,4 @@
 ---
 
+questionnaire_bot_repository_version: "v0.0.2"
 questionnaire_bot_instances: "{{ vault_questionnaire_bot_instances }}"

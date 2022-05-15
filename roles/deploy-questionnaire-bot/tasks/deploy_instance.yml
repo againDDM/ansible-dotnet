@@ -1,5 +1,9 @@
 ---
 
+- name: start deploy
+  debug:
+    msg: "deploy {{ instance.comment }} {{ instance.syslog_identifer }}"
+
 - name: create directories
   file:
     path: "{{ item }}"
@@ -21,10 +25,9 @@
     owner: "{{ questionnaire_bot_user }}"
     group: "{{ questionnaire_bot_group }}"
     mode: "0400"
+    force: yes
   no_log: true
   become: true
-  notify:
-    - restart_all_instances
 
 - name: render questionnaire_bot systemd service template
   template:
@@ -35,8 +38,26 @@
     mode: 0644
   no_log: true
   become: true
-  notify:
-    - restart_all_instances
+
+- name: stop questionnaire_bot systemd service
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ instance.systemd_unit }}"
+    state: stopped
+  no_log: true
+  become: true
+
+- name: sleep
+  pause:
+    seconds: 30
+
+- name: backup data
+  community.general.archive:
+    path: "{{ instance.db_path }}"
+    format: zip
+    dest: "{{ instance.working_directory }}/db-bak-{{ ansible_date_time.epoch }}.zip"
+  become: true
 
 - name: enable questionnaire_bot systemd service
   systemd:

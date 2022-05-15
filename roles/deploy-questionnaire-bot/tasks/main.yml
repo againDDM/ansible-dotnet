@@ -89,8 +89,6 @@
     force: yes
   with_items: "{{ build_results.stdout_lines }}"
   become: true
-  notify:
-    - restart_all_instances
 
 - name: deploy instances
   include_tasks: deploy_instance.yml
