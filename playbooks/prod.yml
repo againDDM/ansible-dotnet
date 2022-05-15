@@ -2,8 +2,7 @@
 
 - name: common
   hosts:
-    - wh_api
-    - wh_database_mysql
+    - all
   roles:
     - common
   tags: common
