@@ -1,8 +1,6 @@
 ---
 
 all:
-  hosts:
-    test-server:
   children:
     dotnet_backends:
       children:

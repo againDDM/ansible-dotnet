@@ -1,6 +1,0 @@
----
-
-ansible_host: "{{ vault_ansible_host }}"
-questionnaire_bot_instances: "{{ vault_questionnaire_bot_instances }}"
-questionnaire_bot_repository_version: "v0.0.2"
-questionnaire_bot_app_directory: "/opt/questionnaire-bot-beta"
