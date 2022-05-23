@@ -120,6 +120,16 @@
     creates: "/etc/letsencrypt/live/{{ proxy_domains[0] }}"
   become: true
 
+- name: renew letsencrypt certificate
+  shell: >
+    letsencrypt certonly -n --webroot
+    -w /var/www/letsencrypt
+    -m {{ proxy_letsencrypt_email }}
+    --agree-tos -d {{ proxy_domains | join(' -d ') }}
+  become: true
+  when:
+    - proxy_renew_cert
+
 - name: render site nginx config
   template:
     src: nginx-tls.conf.j2

@@ -16,3 +16,4 @@ proxy_keepalive_timeout: 65
 proxy_worker_connections: 768
 proxy_types_hash_max_size: 2048
 proxy_metrics_port: 8000
+proxy_renew_cert: false
