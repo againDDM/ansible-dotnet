@@ -25,23 +25,6 @@
     - deploy-wh-api
     - deploy-questionnaire-bot
 
-- name: deploy-questionnaire-bot
-  hosts:
-    - test-server
-  roles:
-    - deploy-questionnaire-bot
-  tags:
-    - deploy-questionnaire-bot-beta
-    - deploy-questionnaire-bot
-
-- name: deploy-questionnaire-bot
-  hosts:
-    - questionnaire_bot
-  roles:
-    - deploy-questionnaire-bot
-  tags:
-    - deploy-questionnaire-bot
-
 - name: deploy-wh-api
   hosts:
     - wh_api
