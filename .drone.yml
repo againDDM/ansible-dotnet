@@ -6,7 +6,7 @@ name: deploy
 
 steps:
   - name: deploy
-    image: haxorof/ansible:v5-ubuntu
+    image: againddm/ci-ansible:5.8.0
     user: root
     environment:
       VAULT_PASS:
