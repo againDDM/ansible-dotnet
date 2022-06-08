@@ -11,15 +11,27 @@ wh_api_timeout_stop_sec: 90
 wh_api_syslog_identifer: "wh-api"
 
 wh_api_working_directory: "/opt/wh-api"
+wh_api_working_directory2: "/opt/bot-sync"
 wh_api_build_directory: "/tmp/wh-api"
 wh_api_build_configuration: "Release"
-wh_api_main_csproj_subpath: ""
+wh_api_main_csproj_subpath: "Refugees.Api/Refugees.Api.csproj"
+wh_api_main_csproj_subpath2: "Refugees.ImportDataBots/Refugees.ImportDataBots.csproj"
 wh_api_repository_url: "git@bitbucket.org:example/example.git"
-wh_api_entrypoint_dll: "Example.dll"
+wh_api_entrypoint_dll: "Refugees.Api.dll"
+wh_api_entrypoint_dll2: "Refugees.ImportDataBots.dll"
 wh_api_repository_version: "master"
 wh_api_database_connection_string: "server=localhost;user=wh_api;password=wh_api;database=wh_api;Convert Zero Datetime=True;"
 
 wh_api_jwt_issuer: "wh-api"
 wh_api_jwt_audience: "wh-api"
-wh_api_jwt_key: "a'UZKV5PB%9H:DqqwgtX:{48BZwg<g=4DX"
+wh_api_jwt_key: "change me in vault variables"
 wh_api_jwt_lifetime: "30"
+
+wh_api_sync_jobs:
+  - minute: "0"
+    hour: "0"
+    weekday: "*"
+    uid: "9000"
+
+wh_api_bot_tokens:
+  "9000": "xxxxxxx:yyyyyyyyyyyyy"

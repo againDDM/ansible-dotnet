@@ -1,0 +1,19 @@
+{
+  "ConnectionStrings": {
+    "RefugeesCon": "{{ wh_api_database_connection_string }}"
+  },
+  "bot": {{ wh_api_bot_tokens | to_nice_json }},
+  "Logging": {
+    "LogLevel": {
+      "Default": "Error",
+      "Microsoft": "Error"
+    }
+  },
+  "Debug": { // Debug provider.
+    "LogLevel": {
+      "Default": "Error", // Overrides preceding LogLevel:Default setting.
+      "Microsoft.Hosting": "Debug" // Debug:Microsoft.Hosting category.
+    }
+  },
+  "AllowedHosts": "*"
+}

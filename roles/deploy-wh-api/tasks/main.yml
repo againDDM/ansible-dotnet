@@ -63,6 +63,16 @@
     chdir: "{{ wh_api_build_directory }}"
   become: false
 
+- name: build application2
+  command: |
+    /usr/bin/dotnet publish
+    --output {{ wh_api_build_directory }}/bin2
+    --configuration {{ wh_api_build_configuration }}
+    {{ wh_api_build_directory }}/{{ wh_api_main_csproj_subpath2 }}
+  args:
+    chdir: "{{ wh_api_build_directory }}"
+  become: false
+
 - name: create working directory
   file:
     path: "{{ wh_api_working_directory }}"
@@ -141,6 +151,64 @@
     enabled: yes
     name: "{{ wh_api_systemd_unit }}"
     state: started
+  become: true
+
+- name: create working directory2
+  file:
+    path: "{{ wh_api_working_directory2 }}"
+    state: "directory"
+    recurse: yes
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: "0755"
+  become: true
+
+- name: ls build results2
+  command: "ls {{ wh_api_build_directory }}/bin2"
+  register: "build_results2"
+
+- name: copy files to working directory
+  copy:
+    remote_src: true
+    src: "{{ wh_api_build_directory }}/bin2/{{ item }}"
+    dest: "{{ wh_api_working_directory2 }}"
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: "0555"
+    backup: no
+    force: yes
+  with_items: "{{ build_results2.stdout_lines }}"
+  become: true
+
+- name: render appsettings template2
+  template:
+    dest: "{{ wh_api_working_directory2 }}/appsettings.json"
+    src: "appsettings2.json.j2"
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: 0644
+  become: true
+
+- name: create logs directory
+  file:
+    path: "{{ wh_api_working_directory2 }}/Logs"
+    state: "directory"
+    recurse: yes
+    owner: "{{ wh_api_user }}"
+    group: "{{ wh_api_group }}"
+    mode: "0755"
+  become: true
+
+- name: creates sync cronjobs
+  cron:
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    weekday: "{{ item.weekday }}"
+    name: "sync with bot"
+    cron_file: "botsync-{{ item.uid }}"
+    user: "{{ wh_api_user }}"
+    job: "cd {{ wh_api_working_directory2 }} && /usr/bin/dotnet ./{{ wh_api_entrypoint_dll2 }} --UID={{ item.uid }}"
+  with_items: "{{ wh_api_sync_jobs }}"
   become: true
 
 - name: clean build directory
