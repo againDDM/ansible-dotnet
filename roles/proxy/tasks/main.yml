@@ -123,7 +123,7 @@
 - name: renew letsencrypt certificate
   shell: >
     letsencrypt certonly -n --webroot
-    -w /var/www/letsencrypt
+    -w /var/www/letsencrypt --force-renewal
     -m {{ proxy_letsencrypt_email }}
     --agree-tos -d {{ proxy_domains | join(' -d ') }}
   become: true
