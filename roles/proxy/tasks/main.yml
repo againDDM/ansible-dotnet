@@ -97,7 +97,7 @@
   register: http
 
 - name: reload nginx
-  command: "nginx -s reload"
+  shell: "nginx -t && nginx -s reload"
   when:
     - http is changed
   become: true
@@ -119,6 +119,8 @@
   args:
     creates: "/etc/letsencrypt/live/{{ proxy_domains[0] }}"
   become: true
+  notify:
+    - reload_nginx
 
 - name: renew letsencrypt certificate
   shell: >
@@ -127,6 +129,8 @@
     -m {{ proxy_letsencrypt_email }}
     --agree-tos -d {{ proxy_domains | join(' -d ') }}
   become: true
+  notify:
+    - reload_nginx
   when:
     - proxy_renew_cert
 
@@ -144,3 +148,19 @@
   with_items: "{{ proxy_vs_configs }}"
   notify:
     - reload_nginx
+
+- name: renew cert cronjob
+  cron:
+    minute: "0"
+    hour: "4"
+    weekday: "*"
+    name: "renew cert"
+    cron_file: "renew-cert-le"
+    user: "root"
+    job: >-
+      letsencrypt certonly -n --webroot
+      -w /var/www/letsencrypt
+      -m {{ proxy_letsencrypt_email }}
+      --agree-tos -d {{ proxy_domains | join(' -d ') }}
+      && nginx -t && nginx -s reload
+  become: true

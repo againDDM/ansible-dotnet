@@ -8,5 +8,5 @@
   become: true
 
 - name: reload_nginx
-  command: "nginx -s reload"
+  shell: "nginx -t && nginx -s reload"
   become: true
