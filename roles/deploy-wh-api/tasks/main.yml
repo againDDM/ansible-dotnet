@@ -207,7 +207,7 @@
     name: "sync with bot"
     cron_file: "botsync-{{ item.uid }}"
     user: "{{ wh_api_user }}"
-    job: "cd {{ wh_api_working_directory2 }} && /usr/bin/dotnet ./{{ wh_api_entrypoint_dll2 }} --UID={{ item.uid }}"
+    job: "cd {{ wh_api_working_directory2 }} && (date >> Logs/botsync-{{ item.uid }}.log) && (/usr/bin/dotnet ./{{ wh_api_entrypoint_dll2 }} --UID={{ item.uid }} >> Logs/botsync-{{ item.uid }}.log 2>&1) && cd -"
   with_items: "{{ wh_api_sync_jobs }}"
   become: true
 

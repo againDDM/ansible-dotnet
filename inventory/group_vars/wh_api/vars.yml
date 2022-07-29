@@ -31,6 +31,15 @@ wh_api_sync_jobs:
   - minute: "25"
     hour: "1"
     weekday: "*"
-    uid: "9431"  
+    uid: "9431"
+  - minute: "30"
+    hour: "1"
+    weekday: "*"
+    uid: "9261"
+  - minute: "35"
+    hour: "1"
+    weekday: "*"
+    uid: "9531"
+
 
 wh_api_bot_tokens: "{{ vault_wh_api_bot_tokens }}"
