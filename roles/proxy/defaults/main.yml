@@ -1,7 +1,8 @@
 ---
 
 proxy_vs_configs:
-  - domains:
+  - upstream: "backend"
+    domains:
     - "example.com"
     backends:
       - host: "127.0.0.1"

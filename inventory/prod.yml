@@ -13,6 +13,9 @@ all:
     wh_database_mysql:
       hosts:
         prod-server:
+    nextcloud:
+      hosts:
+        prod-server: 
     proxy:
       hosts:
         prod-server:

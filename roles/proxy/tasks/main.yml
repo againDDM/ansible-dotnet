@@ -107,7 +107,7 @@
     letsencrypt certonly -n --webroot
     -w /var/www/letsencrypt
     -m {{ proxy_letsencrypt_email }}
-    --agree-tos -d {{ proxy_domains | join(' -d ') }} --dry-run
+    --agree-tos -d {{ proxy_domains | join(' -d ') }} --expand --dry-run
   become: true
 
 - name: create letsencrypt certificate
@@ -127,7 +127,7 @@
     letsencrypt certonly -n --webroot
     -w /var/www/letsencrypt --force-renewal
     -m {{ proxy_letsencrypt_email }}
-    --agree-tos -d {{ proxy_domains | join(' -d ') }}
+    --agree-tos -d {{ proxy_domains | join(' -d ') }} --expand
   become: true
   notify:
     - reload_nginx

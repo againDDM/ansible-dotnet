@@ -1,0 +1,46 @@
+---
+- name: mkdir project
+  file:
+    path: "{{ project_src }}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0700
+
+- name: Render docker-compose template
+  template:
+    dest: "{{ project_src }}/docker-compose.yaml"
+    src: docker-compose.yaml.j2
+    owner: "root"
+    group: "root"
+    validate: "docker-compose -f %s config"
+    mode: 0600
+  register: compose
+
+- name: Docker-compose UP
+  docker_compose:
+    project_src: "{{ project_src }}"
+    project_name: "{{ project_name }}"
+    state: present
+    files:
+      - docker-compose.yaml
+    remove_orphans: yes
+    pull: yes
+    restarted: false
+  register: output
+  when:
+    - not compose is changed
+
+- name: Docker-compose restart
+  docker_compose:
+    project_src: "{{ project_src }}"
+    project_name: "{{ project_name }}"
+    state: present
+    files:
+      - docker-compose.yaml
+    remove_orphans: yes
+    pull: yes
+    restarted: true
+  register: output
+  when:
+    - compose is changed

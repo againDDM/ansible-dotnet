@@ -1,0 +1,17 @@
+---
+project_name: nexcloud
+project_src: /opt/nextcloud/compose
+application_container_name: nextcloud_application
+nextcloud_version: 23-apache
+nextcloud_external_port: 65080
+nexcloud_data_host_path: /opt/nextcloud/data
+nexcloud_memory_limit_mb: 1024
+postgres_container_name: nextcloud_database
+postgres_version: 14
+pgdata_container_path: /var/lib/postgresql/data
+pgdata_host_path: /opt/nextcloud/pgdata
+postgres_host: database
+postgres_db: next_cloud_data
+postgres_user: nc_admin
+postgres_password: nc_admin_password
+postgres_memory_limit_mb: 256

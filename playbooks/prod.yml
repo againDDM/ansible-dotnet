@@ -33,12 +33,22 @@
   tags:
     - deploy-wh-api
 
+- name: nextcloud
+  hosts:
+    - nextcloud
+  roles:
+    - nextcloud
+  tags:
+    - nextcloud
+  become: true
+
 - name: proxy
   hosts:
     - proxy
   roles:
     - proxy
-  tags: proxy
+  tags:
+    - proxy
   become: true
 
 - name: telegraf
